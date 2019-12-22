@@ -35,9 +35,9 @@ class Board(object):
         pygame.draw.line(win,(0,0,0),(self.x0,self.y1-6),(self.x2+100,self.y1-6),11)
         pygame.draw.line(win,(0,0,0),(self.x0,self.y2-6),(self.x2+100,self.y2-6),11)
     def update1(self):
-        for square in self.squares:
-            for indiv in square:
-                indiv.update()
+        for y in range(3):
+            for x in range(3):
+                self.squares[y][x].update()
 class Square(object):
     def __init__(self,x,y):
         self.rect = (x,y,111,111)
