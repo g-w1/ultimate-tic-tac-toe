@@ -30,6 +30,10 @@ class Board(object):
         for y in self.squares:
             for x in y:
                 x.draw()
+    def update1(self):
+        for square in self.squares:
+            for indiv in square:
+                indiv.update()
 class Square(object):
     def __init__(self,x,y):
         self.rect = (x,y,111,111)
@@ -37,14 +41,28 @@ class Square(object):
         self.x = x
         self.clickable = True
         self.done = False
-        self.value = "X"
+        self.value = ""
         self.rect = pygame.Rect(self.x,self.y,111,111)
     def draw(self):
+        if self.clickable == True:
+            pygame.draw.rect(win,(0,200,0),(self.x,self.y,100,100))
+        if self.clickable == False or self.done == True:
+            pygame.draw.rect(win,(200,0,0),(self.x,self.y,100,100))
         if self.value == "X":
-            win.blit(xdisp,(self.x,self.y))
+            win.blit(xdisp,(self.x+36,self.y+36))
         if self.value == "O":
-            win.blit(odisp,(self.x,self.y))
-        '''pygame.draw.rect(win,(0,0,0),(self.x,self.y,111,111))'''
+            win.blit(odisp,(self.x+36,self.y+36))
+    def update(self):
+        global counter
+        if clicked(self.rect) and self.clickable == True:
+            self.value == counter
+            if counter == "X":
+                counter = "O"
+            else:
+                counter = "X"
+            self.done = True
+            self.clickable = False
+        
 run_game = True
 screen = []
 for y in range(3):
@@ -55,10 +73,9 @@ while run_game:
         if event.type == pygame.QUIT:
             run_game = False
     win.fill((255,255,255))
-    
     for space in screen:
         space.draw1()
-    '''screen.draw1()'''
+        space.update1()
     pygame.display.update()
 pygame.quit()
 print(screen)
