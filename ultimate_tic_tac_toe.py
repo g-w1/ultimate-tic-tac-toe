@@ -7,6 +7,9 @@ xdisp = myfont.render('X', False, (0, 0, 0))
 odisp = myfont.render('O', False, (0, 0, 0))
 counter = "X"
 index = []
+wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
+xcount = 0
+ocount = 0
 def clicked(rect):
     if pygame.mouse.get_pressed()[0] and rect.collidepoint(pygame.mouse.get_pos()):
         return True
@@ -27,6 +30,9 @@ class Board(object):
         self.squares = [[Square(self.x0,self.y0),Square(self.x1,self.y0),Square(self.x2,self.y0)],
                         [Square(self.x0,self.y1),Square(self.x1,self.y1), Square(self.x2,self.y1)],
                         [Square(self.x0,self.y2), Square(self.x1,self.y2),Square(self.x2,self.y2)]]
+        self.long = [Square(self.x0,self.y0),Square(self.x1,self.y0),Square(self.x2,self.y0),
+                        Square(self.x0,self.y1),Square(self.x1,self.y1), Square(self.x2,self.y1),
+                        Square(self.x0,self.y2), Square(self.x1,self.y2),Square(self.x2,self.y2)]
     def draw1(self):
         for y in range(3):
             for x in range(3):
@@ -54,6 +60,28 @@ class Board(object):
                     self.squares[y][x].clickable = False
                     index = [x,y]
                     return
+    def check_win(self):
+        global wins
+        global xcount
+        global ocount
+        self.long = []
+        for row in self.squares:
+            for item in row:
+                self.long.append(item)
+        for test in wins:
+            xcount = 0
+            for squares in test:
+                if self.long[squares].value == "X":
+                    xcount += 1
+                if self.long[squares].value == "O":
+                    ocount +=1
+                if ocount == 3:
+                    return "owin"
+                if xcount == 3:
+                    return "xwin"
+                else:
+                    return "nullwin"
+
 class Square(object):
     def __init__(self,x,y):
         self.rect = (x,y,111,111)
@@ -70,7 +98,7 @@ class Square(object):
         if self.clickable == False or self.done == True:
             pygame.draw.rect(win,(140,200,250),(self.x,self.y,100,100))
         if self.done == True:
-            pygame.draw.rect(win,(200,50,50),(self.x,self.y,100,100))
+            pygame.draw.rect(win,(255,100,100),(self.x,self.y,100,100))
         if self.value == "X":
             win.blit(xdisp,(self.x+36,self.y+36))
         if self.value == "O":
@@ -88,6 +116,7 @@ while run_game:
         for space in row:
             space.update1()
             space.draw1()
+            print(space.check_win())
             space.clickable = False
     if index == []:
         for row in screen:
