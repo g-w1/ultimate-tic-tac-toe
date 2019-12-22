@@ -5,6 +5,8 @@ pygame.display.set_caption("Ultimate Tic-Tac-Toe")
 myfont = pygame.font.SysFont('Times New Roman', 30)
 xdisp = myfont.render('X', False, (0, 0, 0))
 odisp = myfont.render('O', False, (0, 0, 0))
+x_win = pygame.image.load("xwin.png").convert()
+o_win = pygame.image.load("owin.png").convert()
 counter = "X"
 index = []
 wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
@@ -33,6 +35,8 @@ class Board(object):
         self.long = [Square(self.x0,self.y0),Square(self.x1,self.y0),Square(self.x2,self.y0),
                         Square(self.x0,self.y1),Square(self.x1,self.y1), Square(self.x2,self.y1),
                         Square(self.x0,self.y2), Square(self.x1,self.y2),Square(self.x2,self.y2)]
+        self.owin = False
+        self.xwin = False
     def draw1(self):
         for y in range(3):
             for x in range(3):
@@ -41,6 +45,10 @@ class Board(object):
         pygame.draw.line(win,(0,0,0),(self.x2-6,self.y0),(self.x2-6,self.y2+100),11)
         pygame.draw.line(win,(0,0,0),(self.x0,self.y1-6),(self.x2+100,self.y1-6),11)
         pygame.draw.line(win,(0,0,0),(self.x0,self.y2-6),(self.x2+100,self.y2-6),11)
+        if self.xwin == True:
+            win.blit(x_win,(self.x0,self.y0))
+        if self.owin == True:
+            win.blit(o_win,(self.x0,self.y0))
     def update1(self):
         global index
         global counter
@@ -78,11 +86,9 @@ class Board(object):
                 if self.long[squares].value == "O":
                     ocount +=1
                 if ocount == 3:
-                    return "owin"
+                    self.owin = True
                 if xcount == 3:
-                    return "xwin"
-                else:
-                    return "nullwin"
+                    self.xwin = True
 
 class Square(object):
     def __init__(self,x,y):
@@ -118,7 +124,7 @@ while run_game:
         for space in row:
             space.update1()
             space.draw1()
-            print(space.check_win())
+            space.check_win()
             space.clickable = False
     if index == []:
         for row in screen:
