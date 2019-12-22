@@ -30,6 +30,10 @@ class Board(object):
         for y in self.squares:
             for x in y:
                 x.draw()
+        pygame.draw.line(win,(0,0,0),(self.x1-6,self.y0),(self.x1-6,self.y2+100),11)
+        pygame.draw.line(win,(0,0,0),(self.x2-6,self.y0),(self.x2-6,self.y2+100),11)
+        pygame.draw.line(win,(0,0,0),(self.x0,self.y1-6),(self.x2+100,self.y1-6),11)
+        pygame.draw.line(win,(0,0,0),(self.x0,self.y2-6),(self.x2+100,self.y2-6),11)
     def update1(self):
         for square in self.squares:
             for indiv in square:
@@ -44,6 +48,7 @@ class Square(object):
         self.value = ""
         self.rect = pygame.Rect(self.x,self.y,111,111)
     def draw(self):
+
         if self.clickable == True:
             pygame.draw.rect(win,(0,200,0),(self.x,self.y,100,100))
         if self.clickable == False or self.done == True:
@@ -55,27 +60,25 @@ class Square(object):
     def update(self):
         global counter
         if clicked(self.rect) and self.clickable == True:
-            self.value == counter
+            self.value = counter
             if counter == "X":
                 counter = "O"
             else:
                 counter = "X"
             self.done = True
-            self.clickable = False
-        
+            self.clickable = False        
 run_game = True
-screen = []
-for y in range(3):
-    for x in range(3):
-        screen.append(Board(x*333,y*333))
+screen = [[Board(0*333,0*333),Board(1*333,0*333),Board(2*333,0*333)],
+[Board(0*333,1*333),Board(1*333,1*333),Board(2*333,1*333)],
+[Board(0*333,2*333),Board(1*333,2*333),Board(2*333,2*333)]]
+win.fill((255,255,255))
 while run_game:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run_game = False
-    win.fill((255,255,255))
-    for space in screen:
-        space.draw1()
-        space.update1()
+    for row in screen:
+        for space in row:
+            space.update1()
+            space.draw1()
     pygame.display.update()
 pygame.quit()
-print(screen)
