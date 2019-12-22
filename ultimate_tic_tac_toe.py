@@ -40,25 +40,25 @@ class Square(object):
         self.value = "X"
         self.rect = pygame.Rect(self.x,self.y,111,111)
     def draw(self):
-        '''if self.value == "X":
+        if self.value == "X":
             win.blit(xdisp,(self.x,self.y))
         if self.value == "O":
-            win.blit(odisp,(self.x,self.y))'''
-        pygame.draw.rect(win,(0,0,0),(self.x,self.y,111,111))
+            win.blit(odisp,(self.x,self.y))
+        '''pygame.draw.rect(win,(0,0,0),(self.x,self.y,111,111))'''
 run_game = True
-'''screen = []
+screen = []
 for y in range(3):
     for x in range(3):
-        screen.append(Board(x*333,y*333))'''
-screen = Board(0,0)
+        screen.append(Board(x*333,y*333))
 while run_game:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run_game = False
     win.fill((255,255,255))
+    
+    for space in screen:
+        space.draw1()
+    '''screen.draw1()'''
     pygame.display.update()
-    '''for space in screen:
-        space.draw1()'''
-    screen.draw1()
 pygame.quit()
 print(screen)
