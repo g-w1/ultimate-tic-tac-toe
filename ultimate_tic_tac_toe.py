@@ -50,12 +50,13 @@ class Board(object):
                     self.squares[y][x].clickable = True
                 if self.clickable == False:
                     self.squares[y][x].clickable = False
-                if clicked(self.squares[y][x].rect) and self.squares[y][x].clickable == True:
+                if clicked(self.squares[y][x].rect) and self.squares[y][x].clickable == True and self.squares[y][x].done == False:
                     self.squares[y][x].value = counter
                     if counter == "X":
                         counter = "O"
                     else:
                         counter = "X"
+                    self.squares[y][x].value = counter
                     self.squares[y][x].done = True
                     self.squares[y][x].clickable = False
                     index = [x,y]
@@ -70,6 +71,7 @@ class Board(object):
                 self.long.append(item)
         for test in wins:
             xcount = 0
+            ocount = 0
             for squares in test:
                 if self.long[squares].value == "X":
                     xcount += 1
