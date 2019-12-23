@@ -9,7 +9,8 @@ o_win = pygame.image.load("owin.png").convert()
 x_win = pygame.image.load("xwin.png").convert()
 o_end = pygame.image.load("oend.png").convert()
 x_end = pygame.image.load("xend.png").convert()
-counter = "X"
+tie_image = pygame.image.load("xend.png").convert()
+counter = "O"
 index = []
 wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
 xcount = 0
@@ -41,6 +42,7 @@ class Board(object):
                         Square(self.x0,self.y2), Square(self.x1,self.y2),Square(self.x2,self.y2)]
         self.owin = False
         self.xwin = False
+        self.tie = False
     def draw1(self):
         global grandxwin
         global grandowin
@@ -55,6 +57,8 @@ class Board(object):
             win.blit(x_win,(self.x0,self.y0))
         if self.owin == True:
             win.blit(o_win,(self.x0,self.y0))
+        if self.tie:
+            win.blit(tie_image,(self.x0,self.y0))
         if grandowin == True:
             win.blit(x_end,(0,0))
         if grandxwin:
@@ -64,13 +68,17 @@ class Board(object):
         global counter
         global grandowin
         global grandxwin
+        if self.tie or self.owin or self.xwin:
+            for row in self.squares:
+                for square in row:
+                    square.clickable = False
         for y in range(3):
             for x in range(3):
                 if self.clickable == True:
                     self.squares[y][x].clickable = True
                 if self.clickable == False:
                     self.squares[y][x].clickable = False
-                if clicked(self.squares[y][x].rect) and self.squares[y][x].clickable == True and self.squares[y][x].done == False:
+                if clicked(self.squares[y][x].rect) and self.squares[y][x].clickable == True and self.squares[y][x].done == False and self.done == False:
                     self.squares[y][x].value = counter
                     if counter == "X":
                         counter = "O"
@@ -85,6 +93,7 @@ class Board(object):
         global wins
         global xcount
         global ocount
+        global index
         self.long = []
         for row in self.squares:
             for item in row:
@@ -99,9 +108,18 @@ class Board(object):
                     ocount +=1
                 if ocount == 3:
                     self.owin = True
+                    self.done = True
+                    return
                 if xcount == 3:
                     self.xwin = True
-
+                    self.done = True
+                    return
+        for square in self.long:
+            if square.value == "":
+                return
+        else:
+            self.tie = True
+        index = []
 class Square(object):
     def __init__(self,x,y):
         self.rect = (x,y,111,111)
@@ -112,7 +130,6 @@ class Square(object):
         self.value = ""
         self.rect = pygame.Rect(self.x,self.y,111,111)
     def draw(self):
-
         if self.clickable == True:
             pygame.draw.rect(win,(0,200,0),(self.x,self.y,100,100))
         if self.clickable == False or self.done == True:
@@ -132,14 +149,22 @@ Board(0*333,2*333),Board(1*333,2*333),Board(2*333,2*333)]
 win.fill((255,255,255))        
 run_game = True
 while run_game:
+    if index == []:
+        for row in screen:
+            for space in row:
+                space.clickable = True
+    elif screen[index[1]][index[0]].xwin or screen[index[1]][index[0]].owin or screen[index[1]][index[0]].tie:
+        index = []
+    else:
+        screen[index[1]][index[0]].clickable = True
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run_game = False
     for row in screen:
         for space in row:
+            space.check_win()
             space.update1()
             space.draw1()
-            space.check_win()
             space.clickable = False
     for board in screenlong:
         for test in wins:
@@ -154,11 +179,5 @@ while run_game:
                     grandowin = True
                 if xcount == 3:
                     grandxwin = True
-    if index == []:
-        for row in screen:
-            for space in row:
-                space.clickable = True
-    else:
-        screen[index[1]][index[0]].clickable = True
     pygame.display.update()
 pygame.quit()
