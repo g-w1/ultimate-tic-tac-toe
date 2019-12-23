@@ -60,9 +60,9 @@ class Board(object):
         if self.tie:
             win.blit(tie_image,(self.x0,self.y0))
         if grandowin == True:
-            win.blit(x_end,(0,0))
-        if grandxwin:
             win.blit(o_end,(0,0))
+        if grandxwin:
+            win.blit(x_end,(0,0))
     def update1(self):
         global index
         global counter
