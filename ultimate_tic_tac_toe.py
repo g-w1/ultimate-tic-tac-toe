@@ -166,6 +166,7 @@ while run_game:
             space.update1()
             space.draw1()
             space.clickable = False
+    screenlong = [x for x in y for y in screen]
     for board in screenlong:
         for test in wins:
             xcount = 0
