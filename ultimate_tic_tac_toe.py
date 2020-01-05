@@ -146,7 +146,7 @@ screen = [[Board(0*333,0*333),Board(1*333,0*333),Board(2*333,0*333)],
 screenlong = [Board(0*333,0*333),Board(1*333,0*333),Board(2*333,0*333),
 Board(0*333,1*333),Board(1*333,1*333),Board(2*333,1*333),
 Board(0*333,2*333),Board(1*333,2*333),Board(2*333,2*333)]
-win.fill((255,255,255))        
+win.fill((255,255,255))
 run_game = True
 while run_game:
     if index == []:
@@ -166,7 +166,10 @@ while run_game:
             space.update1()
             space.draw1()
             space.clickable = False
-    screenlong = [x for x in y for y in screen]
+    screenlong = []
+    for x in screen:
+        for y in x:
+            screenlong.append(y)
     for board in screenlong:
         for test in wins:
             xcount = 0
